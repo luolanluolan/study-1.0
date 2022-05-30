@@ -36,7 +36,6 @@ public class OrderServiceImpl implements OrderService {
     public OrderInfoDto insertOrderInfo(OrderInfoDto orderInfoDto) throws RuntimeException{
         orderInfoDto.setOrderNo(DateUtils.getNowToDf2Str());
         orderInfoDto = this.orderInfoRepository.save(orderInfoDto);
-        JSON.toJSONString(orderInfoDto);
         //发送至消息队列
         sendEpayVoucherToMQ(orderInfoDto.getId());
         return orderInfoDto;

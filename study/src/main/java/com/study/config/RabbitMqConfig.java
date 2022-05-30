@@ -99,6 +99,7 @@ public class RabbitMqConfig {
      * 绑定--队列和交换机通过routingKey绑定
      * @return
      */
+    @Bean
     public Binding generateBinding(){
         return BindingBuilder.bind(generateQueue()).to(generateDirectExchange()).with(ROUTING_KEY);
     }

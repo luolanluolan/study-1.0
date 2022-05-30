@@ -34,7 +34,7 @@ spring:
     show-sql: true #日志中显示sql
   #rabbitMQ配置
   rabbitmq:
-    host: 10.16.23.208:30001
+    addresses: 10.16.23.208:30001
     username: guest
     password: guest
     publisher-confirm-type: correlated #发布确认，调用确认回调RabbitTemplate.setConfirmCallback()
