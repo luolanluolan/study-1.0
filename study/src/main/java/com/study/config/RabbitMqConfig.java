@@ -233,7 +233,7 @@ public class RabbitMqConfig {
         return new RabbitTemplate.ReturnCallback() {
             @Override
             public void returnedMessage(Message message, int i, String s, String s1, String s2) {
-                log.error("支付系统发送消息未找到交换器信息，报错信息如下：replyText-{}, exchange-{}, routingKey-{}, body-{}", s, s1, s2, new String(message.getBody()));
+                log.error("发送消息未找到交换器信息，报错信息如下：replyText-{}, exchange-{}, routingKey-{}, body-{}", s, s1, s2, new String(message.getBody()));
             }
         };
     }
@@ -290,7 +290,7 @@ public class RabbitMqConfig {
         return new ConsumerTagStrategy() {
             @Override
             public String createConsumerTag(String s) {
-                return new StringBuilder("fpay-pay:consumer-").append(ServerConfig.getInstanceId()).append(" queue-").append(s).toString();
+                return new StringBuilder("study:consumer-").append(ServerConfig.getInstanceId()).append(" queue-").append(s).toString();
             }
         };
     }
