@@ -1,0 +1,94 @@
+
+server:
+  port: 9898
+  servlet:
+    context-path: /study
+spring:
+  application:
+    name: study
+  #数据库连接配置
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    #因为mysql版本5.*，mysql驱动8.*，所以需要加时区&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/study?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    #连接池配置
+    type: com.alibaba.druid.pool.DruidDataSource
+    # 初始化，最小，最大连接数
+    initialSize: 5
+    minidle: 5
+    maxActive: 10
+    # 获取数据库连接等待的超时时间
+    maxWait: 60000
+    #redis配置
+#  redis:
+#    port: 6379
+#    host: 192.168.193.129
+  #兼容swagger-ui配置
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  #jpa日志输出配置
+  jpa:
+    show-sql: true #日志中显示sql
+  #rabbitMQ配置
+  rabbitmq:
+    host: 10.16.23.208:30001
+    username: guest
+    password: guest
+    publisher-confirm-type: correlated #发布确认，调用确认回调RabbitTemplate.setConfirmCallback()
+    listener:
+      simple:
+        acknowledge-mode: manual  #消息确认方式：none、manual手动确认和auto 默认auto
+    template:
+      mandatory: true  #启用强制信息
+
+#actuator监控，默认只开启了/health和/info ,配置开启
+management:
+  #指定服务名称
+  endpoints:
+    web:
+      exposure:
+        #include: health,info,env,loggers
+        include: "*" #开启所有
+        #不开启
+        #exclude: bean
+#eureka配置
+eureka:
+  client:
+    enabled: true
+    #启动服务注册
+    register-with-eureka: true  #不配默认true
+    serviceUrl:
+      defaultZone: http://127.0.0.1:9898${server.servlet.context-path}/eureka
+    healthcheck:
+      #将健康监测交给actuator的/health端点
+      enabled: true
+    #eureka-client是否要发现、获取信息,不配默认true
+    fetch-registry: true
+  instance:
+    hostname: ${app.local.ip-address:127.0.0.1}
+    #自动获取IP地址注册到服务中心，相互注册使用IP地址
+    prefer-ip-address: true  #配true,取的instance-id
+    instance-id: ${app.local.ip-address:${eureka.instance.hostname}}:${spring.application.name}:${app.local.port:${server.port}}
+
+#Rabbitmq配置类中配置队列名称
+orderinfo:
+  rabbitmq:
+    queue:
+      name: MY_LOCAL_QUEUE
+    # 消费者并发数
+    concurrentConsumer: 8
+    # 最大消费者并发数
+    maxConcurrentConsumer: 16
+    # 空闲事件间隔，用于回收空闲的消费者
+    idleEventInterval: 60000
+    # 退避策略时间间隔，主要用于消息发送失败时退避策略的时间间隔
+    backPolicyInitialInterval: 1000
+    # 退避策略乘数，用于退避策略的时间间隔增加
+    backPolicyMultiplier: 2
+    # 退避策略的最大时间间隔
+    backPolicyMaxInterval: 100000
+    # 消息发送失败重试次数
+    retryTimes: 3

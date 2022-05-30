@@ -1,0 +1,58 @@
+
+server:
+  port: 9899
+  servlet:
+    context-path: /study
+spring:
+  application:
+    name: study
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    #因为mysql版本5.*，mysql驱动8.*，所以需要加时区&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/study?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+    # 初始化，最小，最大连接数
+    initialSize: 5
+    minidle: 5
+    maxActive: 10
+    # 获取数据库连接等待的超时时间
+    maxWait: 60000
+  #  redis:
+  #    port: 6379
+  #    host: 192.168.193.129
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  jpa:
+    show-sql: true #日志中显示sql
+
+
+#actuator监控，默认只开启了/health和/info ,配置开启
+management:
+  #指定服务名称
+  endpoints:
+    web:
+      exposure:
+        #include: health,info,env,loggers
+        include: "*" #开启所有
+        #不开启
+        #exclude: bean
+eureka:
+  client:
+    enabled: true
+    #启动服务注册
+    register-with-eureka: true  #不配默认true
+    serviceUrl:
+      defaultZone: http://127.0.0.1:9899${server.servlet.context-path}/eureka
+    healthcheck:
+      #将健康监测交给actuator的/health端点
+      enabled: true
+    #eureka-client是否要发现、获取信息,不配默认true
+    fetch-registry: true
+  instance:
+    hostname: ${app.local.ip-address:127.0.0.1}
+    #自动获取IP地址注册到服务中心，相互注册使用IP地址
+    prefer-ip-address: true  #配true,取的instance-id
+    instance-id: ${app.local.ip-address:${eureka.instance.hostname}}:${spring.application.name}:${app.local.port:${server.port}}
