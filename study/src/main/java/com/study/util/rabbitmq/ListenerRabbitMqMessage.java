@@ -6,12 +6,14 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.stereotype.Component;
 
 /**
  * @Author : luolan
  * @Date: 2022-05-30 20:39
  * @Description :
  */
+@Component
 @Slf4j
 public class ListenerRabbitMqMessage {
 
