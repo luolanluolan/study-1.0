@@ -5,7 +5,7 @@ package com.study.util.rabbitmq;
  * @Date: 2022-05-30 12:12
  * @Description :
  */
-public interface ISendMessage {
+public interface ISendMessageToRabbitMq {
 
     /**
      * 普通发送消息方法，不保证消息发送至队列

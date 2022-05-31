@@ -1,12 +1,12 @@
 package com.study.order.service;
 
-import com.alibaba.fastjson.JSON;
 import com.study.config.RabbitMqConfig;
+import com.study.order.api.CardFeignClientService;
 import com.study.order.api.OrderService;
 import com.study.order.entity.OrderInfoDto;
 import com.study.order.repository.OrderInfoRepository;
 import com.study.util.DateUtils;
-import com.study.util.rabbitmq.ISendMessage;
+import com.study.util.rabbitmq.ISendMessageToRabbitMq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @Author : luolan
@@ -30,7 +29,10 @@ public class OrderServiceImpl implements OrderService {
     private OrderInfoRepository orderInfoRepository;
 
     @Autowired
-    private ISendMessage sendMessage;
+    private ISendMessageToRabbitMq sendMessage;
+
+    @Resource
+    private CardFeignClientService cardFeignClientService;
 
     @Override
     public OrderInfoDto insertOrderInfo(OrderInfoDto orderInfoDto) throws RuntimeException{
@@ -38,6 +40,7 @@ public class OrderServiceImpl implements OrderService {
         orderInfoDto = this.orderInfoRepository.save(orderInfoDto);
         //发送至消息队列
         sendEpayVoucherToMQ(orderInfoDto.getId());
+        cardFeignClientService.addCardInfoByOrderId(orderInfoDto.getId());
         return orderInfoDto;
     }
 
