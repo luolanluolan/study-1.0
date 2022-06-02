@@ -77,7 +77,7 @@ eureka:
 orderinfo:
   rabbitmq:
     queue:
-      name: MY_LOCAL_QUEUE
+      name: my_local_queue
     # 消费者并发数
     concurrentConsumer: 8
     # 最大消费者并发数
